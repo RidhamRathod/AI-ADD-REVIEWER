@@ -19,7 +19,7 @@ tool = language_tool_python.LanguageTool('en-US')
 
 # Function to extract text from an image
 def extract_text():
-    image_path = "C:\\Users\\Ridham\\Desktop\\AI-ADD-REVIEWER\\images\\poster 15.jpg"  # Directly using the image path
+    image_path = r"C:\Users\Ridham\Desktop\AI-ADD-REVIEWER\images\poster 4.png"  # Directly using the image path
     img = cv2.imread(image_path)
 
     if img is None:
@@ -66,16 +66,20 @@ def evaluate_grammar(text):
         return f"Score: {accuracy_score:.2f} - ❌ Poor grammar."
 
 # Call-to-action phrase detection
+import re
+
 def evaluate_call_to_action(text):
     call_to_action_keywords = ["buy", "now", "order", "get started", "shop", "click here"]
-    count = sum(1 for word in call_to_action_keywords if word in text.lower())
-
+    
+    count = sum(1 for phrase in call_to_action_keywords if re.search(rf"\b{re.escape(phrase)}\b", text, re.IGNORECASE))
+    
     if count >= 2:
         return f"Score: {count} - ✅ Strong call to action."
     elif count == 1:
         return f"Score: {count} - ⚠️ Moderate call to action."
     else:
         return f"Score: {count} - ❌ Weak call to action."
+
 
 # Extract text
 text, error = extract_text()
